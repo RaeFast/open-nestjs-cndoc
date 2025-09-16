@@ -8,6 +8,15 @@
 ssh-keygen -t rsa -C "202209166249@alunos.estacio.br" -f ~/.ssh/id_rsa_for_RaeFast
 ```
 
+config 示例
+
+```bash
+Host RaeFast
+HostName github.com
+User git
+IdentityFile ~/.ssh/id_rsa_for_RaeFast
+```
+
 为仓库设置使用 config 中用户
 
 ```bash
