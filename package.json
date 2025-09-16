@@ -1,0 +1,20 @@
+{
+  "name": "open-nestjs-cndoc",
+  "version": "1.0.0",
+  "description": "打开 NestJs 中文文档",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "RaeFast:RaeFast/open-nestjs-cndoc.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "devDependencies": {
+    "oxlint": "^1.15.0"
+  }
+}
