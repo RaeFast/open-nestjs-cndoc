@@ -24,9 +24,10 @@
     leftOffset: "15px",
   };
 
-  // 创建样式元素
-  const style = document.createElement("style");
-  style.textContent = `
+  // 工具函数：创建样式
+  function createStyles() {
+    const style = document.createElement("style");
+    style.textContent = `
         .domain-switcher-btn {
             position: fixed;
             left: ${CONFIG.leftOffset};
@@ -42,40 +43,71 @@
             font-size: ${CONFIG.buttonSize * 0.6}px;
             box-shadow: 0 2px 5px rgba(0,0,0,0.3);
             transition: transform 0.2s, opacity 0.2s;
+            display: none; /* 初始隐藏，等待页面加载 */
         }
         .domain-switcher-btn:hover {
             transform: scale(1.1);
             opacity: 0.9;
         }
     `;
-  document.head.appendChild(style);
+    document.head.appendChild(style);
+    return style;
+  }
 
-  // 创建按钮元素
-  const button = document.createElement("button");
-  button.className = "domain-switcher-btn";
-  button.title = "在新标签页打开修改域名后的页面";
-  button.textContent = CONFIG.buttonText;
+  // 工具函数：创建按钮
+  function createButton() {
+    const button = document.createElement("button");
+    button.className = "domain-switcher-btn";
+    button.title = "在新标签页打开修改域名后的页面";
+    button.textContent = CONFIG.buttonText;
+    return button;
+  }
 
-  // 添加点击事件处理
-  button.addEventListener("click", function () {
+  // 工具函数：处理按钮点击
+  function handleButtonClick() {
     try {
       const currentUrl = new URL(window.location.href);
-
-      // 修改域名并保持其他部分不变
       currentUrl.hostname = CONFIG.targetDomain;
-
-      // 打开新标签页（注意：可能会被浏览器弹出拦截器阻止）
-      window.open(currentUrl.href, "_blank");
+      // 使用noopener noreferrer 提高安全性
+      window.open(currentUrl.href, "_blank", "noopener,noreferrer");
     } catch (error) {
       console.error("域名切换失败:", error);
+      alert("无法打开中文文档，请检查网络连接。");
     }
-  });
+  }
 
-  // 将按钮添加到页面
-  document.body.appendChild(button);
+  // 主函数：初始化脚本
+  function init() {
+    // 检查是否在正确页面
+    if (!window.location.hostname.includes("docs.nestjs.com")) {
+      return;
+    }
 
-  // 确保按钮在页面加载完成后可见
-  window.addEventListener("load", () => {
-    button.style.display = "block";
-  });
+    const style = createStyles();
+    const button = createButton();
+
+    // 添加事件监听器
+    button.addEventListener("click", handleButtonClick);
+
+    // 将按钮添加到页面
+    document.body.appendChild(button);
+
+    // 页面加载完成后显示按钮
+    window.addEventListener("load", () => {
+      button.style.display = "block";
+    });
+
+    // 清理函数（可选，用于脚本卸载）
+    window.addEventListener("beforeunload", () => {
+      if (style.parentNode) {
+        style.parentNode.removeChild(style);
+      }
+      if (button.parentNode) {
+        button.parentNode.removeChild(button);
+      }
+    });
+  }
+
+  // 启动脚本
+  init();
 })();
